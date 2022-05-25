@@ -27,6 +27,7 @@ async function run() {
       const tool = client.db('tool_store').collection('tool');
       const ordersCollection = client.db('tool_store').collection('orders');
       const reviewCollection = client.db('tool_store').collection('review');
+      const usersCollection = client.db('tool_store').collection('users');
 
       // find all product from database
       app.get('/tool', async (req, res) => {
@@ -117,6 +118,46 @@ async function run() {
         app.get('/review/', async (req, res) => {
             const result = await reviewCollection.find({}).toArray();
             res.send(result);
+        })
+
+        // New user save to database
+        app.post('/users', async (req, res) => {
+            const user = req.body;
+            const result = await usersCollection.insertOne(user);
+            console.log(result);
+            res.json(result);
+        });
+
+        // Save google user data to database
+        app.put('/users', async (req, res) => {
+            const user = req.body;
+            const filter = { email: user.email };
+            const options = { upsert: true };
+            const updateDoc = { $set: user };
+            const result = await usersCollection.updateOne(filter, updateDoc, options);
+            res.json(result);
+        });
+
+        // make an user to admin
+        app.put('/users/admin', async (req, res) => {
+            const user = req.body;
+            const filter = { email: user.email };
+            const updateDoc = { $set: { role: 'admin' } };
+            const result = await usersCollection.updateOne(filter, updateDoc);
+            res.json(result);
+
+        })
+
+        // Check admin
+        app.get('/users/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email };
+            const user = await usersCollection.findOne(query);
+            let isAdmin = false;
+            if (user?.role === 'admin') {
+                isAdmin = true;
+            }
+            res.json({ admin: isAdmin });
         })
     }
     finally {
