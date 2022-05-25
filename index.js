@@ -22,12 +22,14 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run() {
     try {
         await client.connect();
-        const database = client.db("tool_store");
-        const jewelry = database.collection("tool");
+      const jewelry = client.db('tool_store').collection('tool');
 
-        app.get("/tool/", async (req, res) => {
-            const cursor = await jewelry.find({}).toArray();
-            res.send(cursor);
+      app.get('/tool', async (req, res) => {
+        const query = {};
+        const cursor = jewelry.find(query);
+        const tools = await cursor.toArray();
+        res.send(tools);
+
         })
     }
     finally {
