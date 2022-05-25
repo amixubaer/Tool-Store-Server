@@ -24,15 +24,33 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run() {
     try {
         await client.connect();
-      const jewelry = client.db('tool_store').collection('tool');
+      const tool = client.db('tool_store').collection('tool');
+      const ordersCollection = client.db('tool_store').collection('orders');
 
+      // find all product from database
       app.get('/tool', async (req, res) => {
         const query = {};
-        const cursor = jewelry.find(query);
+        const cursor = tool.find(query);
         const tools = await cursor.toArray();
         res.send(tools);
 
         })
+
+        // find single product from database
+        app.get("/tool/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) }
+            const cursor = await tool.findOne(query);
+            res.send(cursor);
+        })
+
+        // Add product to database collection
+        app.post('/orders/', async (req, res) => {
+            const product = req.body;
+            const result = await ordersCollection.insertOne(product);
+            res.json(result);
+        })
+
     }
     finally {
         // await client.close();
