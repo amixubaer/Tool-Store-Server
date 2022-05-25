@@ -26,6 +26,7 @@ async function run() {
         await client.connect();
       const tool = client.db('tool_store').collection('tool');
       const ordersCollection = client.db('tool_store').collection('orders');
+      const reviewCollection = client.db('tool_store').collection('review');
 
       // find all product from database
       app.get('/tool', async (req, res) => {
@@ -48,6 +49,13 @@ async function run() {
         app.post('/orders/', async (req, res) => {
             const product = req.body;
             const result = await ordersCollection.insertOne(product);
+            res.json(result);
+        })
+
+         // Add review to database collection
+         app.post('/review', async (req, res) => {
+            const review = req.body;
+            const result = await reviewCollection.insertOne(review);
             res.json(result);
         })
 
