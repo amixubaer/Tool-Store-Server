@@ -75,7 +75,7 @@ async function run() {
             const result = await ordersCollection.insertOne(product);
             res.json(result);
         })
-        
+
         // Delete a Single Order API 
         app.delete('/orders/:id', async (req, res) => {
             const id = req.params.id;
@@ -99,7 +99,7 @@ async function run() {
             const options = { upsert: true };
             const updateDoc = {
                 $set: {
-                    status: "approved"
+                    status: "Shipped"
                 },
             };
             const result = await ordersCollection.updateOne(filter, updateDoc, options);
