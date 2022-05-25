@@ -37,6 +37,14 @@ async function run() {
 
         })
 
+
+        // Add a new product to database collection
+        app.post('/tool/', async (req, res) => {
+            const product = req.body;
+            const result = await tool.insertOne(product);
+            res.json(result);
+        })
+
         // find single product from database
         app.get("/tool/:id", async (req, res) => {
             const id = req.params.id;
@@ -52,6 +60,14 @@ async function run() {
             res.json(result);
         })
 
+         // Find my orders from database
+         app.get('/orders/', async (req, res) => {
+            const email = req.query.email;
+            const query = { Email: email };
+            const order = await ordersCollection.find(query).toArray();
+            res.send(order);
+        })
+
          // Add review to database collection
          app.post('/review', async (req, res) => {
             const review = req.body;
@@ -59,6 +75,11 @@ async function run() {
             res.json(result);
         })
 
+        // Find review to database collection
+        app.get('/review/', async (req, res) => {
+            const result = await reviewCollection.find({}).toArray();
+            res.send(result);
+        })
     }
     finally {
         // await client.close();
