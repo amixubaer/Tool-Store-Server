@@ -10,7 +10,8 @@ Server Side:
 https://github.com/programming-hero-web-course1/manufacturer-website-server-side-amixubaer
 
 Admin Mail: 
-
+admin@toolsmith.com
+pass: 69541581
 
 ## 🏆 Features :
 
